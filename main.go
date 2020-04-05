@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"log"
 	"regexp"
-	"strings"
 
 	"github.com/turnage/graw"
 	"github.com/turnage/graw/reddit"
 )
 
 var kenobiCount = make(map[string]int)
+
+const helloTherePattern = "(?i)^(hello there)[!]?$"
 
 // GrievousBot is the main handler for reddit events
 type GrievousBot struct {
@@ -21,8 +22,8 @@ type GrievousBot struct {
 func (b *GrievousBot) Comment(c *reddit.Comment) error {
 	log.Printf("Received comment with ID [%v] by %vn", c.ID, c.Author)
 
-	r, _ := regexp.Compile("(?i)^(hello there)[!]?$")
-	if !r.MatchString(strings.ToLower(c.Body)) {
+	r, _ := regexp.Compile(helloTherePattern)
+	if !r.MatchString(c.Body) {
 		log.Printf("Comment did not match pattern, moving on\n")
 		return nil
 	}
