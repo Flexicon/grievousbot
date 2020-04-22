@@ -42,7 +42,7 @@ func (b *GrievousBot) Comment(c *reddit.Comment) error {
 	count := b.kenobiCount[c.Author]
 	msg := "General Kenobi"
 
-	if count >= 1 {
+	if count > 1 {
 		msg += fmt.Sprintf("\n\nWe meet again /u/%s... (%d times now)", c.Author, count)
 	}
 
