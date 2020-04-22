@@ -16,7 +16,7 @@ func main() {
 	}
 
 	handler := newGrievousBot(bot, username)
-	cfg := graw.Config{SubredditComments: []string{"flexicondev"}}
+	cfg := graw.Config{SubredditComments: []string{"flexicondev", "prequelmemes"}}
 
 	_, wait, err := graw.Run(handler, bot, cfg)
 	if err != nil {
