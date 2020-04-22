@@ -34,18 +34,22 @@ func (b *GrievousBot) Comment(c *reddit.Comment) error {
 
 	r, _ := regexp.Compile(helloTherePattern)
 	if !r.MatchString(c.Body) {
-		log.Printf("Comment did not match pattern, moving on")
+		log.Printf("Comment [%s] did not match pattern, moving on", c.ID)
 		return nil
 	}
 
 	b.kenobiCount[c.Author]++
 	count := b.kenobiCount[c.Author]
 	msg := "General Kenobi"
-
 	if count > 1 {
 		msg += fmt.Sprintf("\n\nWe meet again /u/%s... (%d times now)", c.Author, count)
 	}
 
 	log.Printf("Comment with ID [%s] matched pattern, sending reply", c.ID)
-	return b.bot.Reply(c.Name, msg)
+	reply, err := b.bot.GetReply(c.Name, msg)
+	if err != nil {
+		log.Printf("Reply to [%s] sent successfully - Link: https://reddit.com%s", c.ID, reply.URL)
+	}
+
+	return err
 }
