@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"regexp"
 
@@ -12,16 +11,14 @@ const helloTherePattern = "(?i)^(hello there)[!]?$"
 
 // GrievousBot is the main handler for reddit events
 type GrievousBot struct {
-	bot         reddit.Bot
-	username    string
-	kenobiCount map[string]int
+	bot      reddit.Bot
+	username string
 }
 
 func newGrievousBot(bot reddit.Bot, username string) *GrievousBot {
 	return &GrievousBot{
-		bot:         bot,
-		username:    username,
-		kenobiCount: make(map[string]int),
+		bot:      bot,
+		username: username,
 	}
 }
 
@@ -38,14 +35,9 @@ func (b *GrievousBot) Comment(c *reddit.Comment) error {
 		return nil
 	}
 
-	b.kenobiCount[c.Author]++
-	count := b.kenobiCount[c.Author]
-	msg := "General Kenobi"
-	if count > 1 {
-		msg += fmt.Sprintf("\n\nWe meet again /u/%s... (%d times now)", c.Author, count)
-	}
-
 	log.Printf("Comment with ID [%s] matched pattern, sending reply", c.ID)
+
+	msg := "General Kenobi. You are a bold one."
 	reply, err := b.bot.GetReply(c.Name, msg)
 	if err != nil {
 		log.Printf("Reply to [%s] sent successfully - Link: https://reddit.com%s", c.ID, reply.URL)
