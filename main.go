@@ -11,7 +11,13 @@ import (
 	"github.com/turnage/graw/reddit"
 )
 
+var (
+	RequiredEnvVars = []string{"CLIENT_USERNAME", "CLIENT_SECRET", "CLIENT_ID", "CLIENT_PASSWORD", "USER_AGENT"}
+)
+
 func main() {
+	ensureEnvironmentVariablesPresent(RequiredEnvVars)
+
 	bot, username, err := newRedditBot()
 	if err != nil {
 		log.Fatalln("Failed to create bot handle: ", err)
@@ -70,4 +76,12 @@ func runHttpServer() error {
 
 	log.Printf("Grievous http server started on [::]:%s", port)
 	return http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
+}
+
+func ensureEnvironmentVariablesPresent(vars []string) {
+	for _, v := range vars {
+		if _, ok := os.LookupEnv(v); !ok {
+			log.Fatalf("Missing environment variable '%s'", v)
+		}
+	}
 }
