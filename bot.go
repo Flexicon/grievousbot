@@ -56,9 +56,11 @@ func (b *GrievousBot) Comment(c *reddit.Comment) error {
 	reply, err := b.bot.GetReply(c.Name, helloThereMsg)
 	if err == nil {
 		log.Printf("Reply to [%s] sent successfully - Link: https://reddit.com%s", c.ID, reply.URL)
+	} else {
+		log.Printf("Failed to reply to [%s]: %v", c.ID, err)
 	}
 
-	return err
+	return nil
 }
 
 // CommentReply captures the event that a comment reply was made to the bot
@@ -71,9 +73,11 @@ func (b *GrievousBot) CommentReply(r *reddit.Message) error {
 	newReply, err := b.bot.GetReply(r.Name, randomReplyQuote())
 	if err == nil {
 		log.Printf("Reply to [%s] sent successfully - Link: https://reddit.com%s", r.ID, newReply.URL)
+	} else {
+		log.Printf("Failed to reply to [%s]: %v", r.ID, err)
 	}
 
-	return err
+	return nil
 }
 
 func isHelloThereMessage(msg string) bool {
