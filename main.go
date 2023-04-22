@@ -26,8 +26,8 @@ func main() {
 
 	bot, username, err := newRedditBot()
 	if err != nil {
-		log.Fatalln("Failed to create bot handle: ", err)
 		sentry.CaptureException(err)
+		log.Fatalln("Failed to create bot handle: ", err)
 	}
 
 	handler := newGrievousBot(bot, username)
@@ -44,15 +44,15 @@ func main() {
 
 	go func() {
 		if err := runHttpServer(); err != nil {
-			log.Fatalln(err)
 			sentry.CaptureException(err)
+			log.Fatalln(err)
 		}
 	}()
 
 	log.Println("General Grievous standing by...")
 	if err := wait(); err != nil {
-		log.Fatalln(err)
 		sentry.CaptureException(err)
+		log.Fatalln(err)
 	}
 }
 

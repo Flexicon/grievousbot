@@ -43,6 +43,8 @@ func newGrievousBot(bot reddit.Bot, username string) *GrievousBot {
 
 // Comment captures the event that a comment was made in a watched subreddit
 func (b *GrievousBot) Comment(c *reddit.Comment) error {
+	defer sentry.Recover()
+
 	if c.Author == b.username {
 		return nil
 	}
@@ -69,6 +71,8 @@ func (b *GrievousBot) Comment(c *reddit.Comment) error {
 
 // CommentReply captures the event that a comment reply was made to the bot
 func (b *GrievousBot) CommentReply(r *reddit.Message) error {
+	defer sentry.Recover()
+
 	if r.Author == b.username || isHelloThereMessage(r.Body) {
 		return nil
 	}
