@@ -86,6 +86,6 @@ func isHelloThereMessage(msg string) bool {
 }
 
 func randomReplyQuote() string {
-	rand.Seed(time.Now().Unix())
-	return replyQuotes[rand.Intn(len(replyQuotes))]
+	r := rand.New(rand.NewSource(time.Now().Unix()))
+	return replyQuotes[r.Intn(len(replyQuotes))]
 }
