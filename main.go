@@ -5,7 +5,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
+	"github.com/getsentry/sentry-go"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/turnage/graw"
 	"github.com/turnage/graw/reddit"
@@ -17,6 +19,10 @@ var (
 
 func main() {
 	ensureEnvironmentVariablesPresent(RequiredEnvVars)
+
+	setupSentry()
+	// Flush buffered events before the program terminates.
+	defer sentry.Flush(2 * time.Second)
 
 	bot, username, err := newRedditBot()
 	if err != nil {
@@ -83,5 +89,21 @@ func ensureEnvironmentVariablesPresent(vars []string) {
 		if _, ok := os.LookupEnv(v); !ok {
 			log.Fatalf("Missing environment variable '%s'", v)
 		}
+	}
+}
+
+func setupSentry() {
+	dsn, ok := os.LookupEnv("SENTRY_DSN")
+	if !ok {
+		log.Println("Skipping Sentry setup - SENTRY_DSN is not set")
+		return
+	}
+
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn:              dsn,
+		TracesSampleRate: 1.0,
+	})
+	if err != nil {
+		log.Fatalf("sentry.Init: %s", err)
 	}
 }
