@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"math/rand"
 	"regexp"
 	"time"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/turnage/graw/reddit"
 )
 
@@ -57,7 +59,9 @@ func (b *GrievousBot) Comment(c *reddit.Comment) error {
 	if err == nil {
 		log.Printf("Reply to [%s] sent successfully - Link: https://reddit.com%s", c.ID, reply.URL)
 	} else {
-		log.Printf("Failed to reply to [%s]: %v", c.ID, err)
+		err = fmt.Errorf("Failed to reply to [%s]: %v", c.ID, err)
+		log.Println(err)
+		sentry.CaptureException(err)
 	}
 
 	return nil
@@ -74,7 +78,9 @@ func (b *GrievousBot) CommentReply(r *reddit.Message) error {
 	if err == nil {
 		log.Printf("Reply to [%s] sent successfully - Link: https://reddit.com%s", r.ID, newReply.URL)
 	} else {
-		log.Printf("Failed to reply to [%s]: %v", r.ID, err)
+		err = fmt.Errorf("Failed to reply to [%s]: %v", r.ID, err)
+		log.Println(err)
+		sentry.CaptureException(err)
 	}
 
 	return nil
