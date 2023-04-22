@@ -105,10 +105,19 @@ func setupSentry() {
 
 	err := sentry.Init(sentry.ClientOptions{
 		Dsn:              dsn,
+		Environment:      appEnv(),
 		TracesSampleRate: 1.0,
 		AttachStacktrace: true,
 	})
 	if err != nil {
 		log.Fatalf("sentry.Init: %s", err)
 	}
+}
+
+func appEnv() string {
+	v, ok := os.LookupEnv("APP_ENV")
+	if !ok {
+		return "development"
+	}
+	return v
 }
