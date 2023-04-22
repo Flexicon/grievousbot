@@ -27,6 +27,7 @@ func main() {
 	bot, username, err := newRedditBot()
 	if err != nil {
 		log.Fatalln("Failed to create bot handle: ", err)
+		sentry.CaptureException(err)
 	}
 
 	handler := newGrievousBot(bot, username)
@@ -38,17 +39,20 @@ func main() {
 	_, wait, err := graw.Run(handler, bot, cfg)
 	if err != nil {
 		log.Fatalln("Failed to start graw run: ", err)
+		sentry.CaptureException(err)
 	}
 
 	go func() {
 		if err := runHttpServer(); err != nil {
 			log.Fatalln(err)
+			sentry.CaptureException(err)
 		}
 	}()
 
 	log.Println("General Grievous standing by...")
 	if err := wait(); err != nil {
 		log.Fatalln(err)
+		sentry.CaptureException(err)
 	}
 }
 
@@ -102,6 +106,7 @@ func setupSentry() {
 	err := sentry.Init(sentry.ClientOptions{
 		Dsn:              dsn,
 		TracesSampleRate: 1.0,
+		AttachStacktrace: true,
 	})
 	if err != nil {
 		log.Fatalf("sentry.Init: %s", err)
