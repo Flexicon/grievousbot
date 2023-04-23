@@ -72,7 +72,7 @@ func newRedditBot() (reddit.Bot, string, error) {
 			Username: username,
 			Password: os.Getenv("CLIENT_PASSWORD"),
 		},
-		Rate: 0,
+		Rate: 5 * time.Second,
 	})
 
 	return bot, username, err
