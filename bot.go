@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
-	"os"
 	"regexp"
-	"strings"
 	"time"
 
 	"github.com/getsentry/sentry-go"
@@ -100,10 +98,4 @@ func isHelloThereMessage(msg string) bool {
 func randomReplyQuote() string {
 	r := rand.New(rand.NewSource(time.Now().Unix()))
 	return replyQuotes[r.Intn(len(replyQuotes))]
-}
-
-func debugLog(format string, v ...interface{}) {
-	if strings.ToLower(os.Getenv("DEBUG")) == "true" {
-		log.Printf(format, v...)
-	}
 }

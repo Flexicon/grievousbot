@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/getsentry/sentry-go"
@@ -19,6 +20,10 @@ var (
 
 func main() {
 	ensureEnvironmentVariablesPresent(RequiredEnvVars)
+
+	if isDebug() {
+		log.Println("DEBUG mode enabled")
+	}
 
 	setupSentry()
 	// Flush buffered events before the program terminates.
@@ -120,4 +125,14 @@ func appEnv() string {
 		return "development"
 	}
 	return v
+}
+
+func debugLog(format string, v ...interface{}) {
+	if isDebug() {
+		log.Printf(format, v...)
+	}
+}
+
+func isDebug() bool {
+	return strings.ToLower(os.Getenv("DEBUG")) == "true"
 }
