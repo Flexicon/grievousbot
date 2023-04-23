@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/getsentry/sentry-go"
@@ -48,14 +50,14 @@ func (b *GrievousBot) Comment(c *reddit.Comment) error {
 	if c.Author == b.username {
 		return nil
 	}
-	log.Printf("Received comment with ID [%s] by [%s] - Link: https://reddit.com%s", c.ID, c.Author, c.Permalink)
+	debugLog("Received comment with ID [%s] by [%s] - Link: https://reddit.com%s", c.ID, c.Author, c.Permalink)
 
 	if !isHelloThereMessage(c.Body) {
-		log.Printf("Comment [%s] did not match pattern, moving on", c.ID)
+		debugLog("Comment [%s] did not match pattern, moving on", c.ID)
 		return nil
 	}
 
-	log.Printf("Comment with ID [%s] matched pattern, sending reply", c.ID)
+	debugLog("Comment with ID [%s] matched pattern, sending reply", c.ID)
 
 	reply, err := b.bot.GetReply(c.Name, helloThereMsg)
 	if err == nil {
@@ -76,7 +78,7 @@ func (b *GrievousBot) CommentReply(r *reddit.Message) error {
 	if r.Author == b.username || isHelloThereMessage(r.Body) {
 		return nil
 	}
-	log.Printf("Received reply to comment with ID [%s] by [%s] - Link: https://reddit.com%s", r.ID, r.Author, r.Context)
+	debugLog("Received reply to comment with ID [%s] by [%s] - Link: https://reddit.com%s", r.ID, r.Author, r.Context)
 
 	newReply, err := b.bot.GetReply(r.Name, randomReplyQuote())
 	if err == nil {
@@ -98,4 +100,10 @@ func isHelloThereMessage(msg string) bool {
 func randomReplyQuote() string {
 	r := rand.New(rand.NewSource(time.Now().Unix()))
 	return replyQuotes[r.Intn(len(replyQuotes))]
+}
+
+func debugLog(format string, v ...interface{}) {
+	if strings.ToLower(os.Getenv("DEBUG")) == "true" {
+		log.Printf(format, v...)
+	}
 }
