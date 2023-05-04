@@ -37,7 +37,7 @@ func main() {
 
 	handler := newGrievousBot(bot, username)
 	cfg := graw.Config{
-		SubredditComments: []string{"flexicondev", os.Getenv("SUBREDDITS")},
+		SubredditComments: []string{os.Getenv("SUBREDDITS")},
 		CommentReplies:    true,
 	}
 
