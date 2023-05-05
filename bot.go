@@ -59,7 +59,7 @@ func (b *GrievousBot) Comment(c *reddit.Comment) error {
 
 	reply, err := b.bot.GetReply(c.Name, helloThereMsg)
 	if err == nil {
-		log.Printf("Reply to [%s] sent successfully - Link: https://reddit.com%s", c.ID, reply.URL)
+		log.Printf("Reply to [%s] sent successfully - Link: %s", c.ID, reply.URL)
 	} else {
 		err = fmt.Errorf("Failed to reply to [%s]: %v", c.ID, err)
 		log.Println(err)
@@ -80,7 +80,7 @@ func (b *GrievousBot) CommentReply(r *reddit.Message) error {
 
 	newReply, err := b.bot.GetReply(r.Name, randomReplyQuote())
 	if err == nil {
-		log.Printf("Reply to [%s] sent successfully - Link: https://reddit.com%s", r.ID, newReply.URL)
+		log.Printf("Reply to [%s] sent successfully - Link: %s", r.ID, newReply.URL)
 	} else {
 		err = fmt.Errorf("Failed to reply to [%s]: %v", r.ID, err)
 		log.Println(err)
