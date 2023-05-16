@@ -43,8 +43,8 @@ func main() {
 
 	_, wait, err := graw.Run(handler, bot, cfg)
 	if err != nil {
-		log.Fatalln("Failed to start graw run: ", err)
 		sentry.CaptureException(err)
+		log.Fatalln("Failed to start graw run: ", err)
 	}
 
 	go func() {
